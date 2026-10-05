@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us — ColorTube | Madhukar & Sons</title>
+    <style>
+        :root {
+            --bg-dark: #0a101d;
+            --surface: #141d2e;
+            --surface-card: #1c273c;
+            --primary: #00d2b4;
+            --primary-glow: rgba(0, 210, 180, 0.25);
+            --text-main: #e8ecf4;
+            --text-muted: #95a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #38bdf8;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        body { background: var(--bg-dark); color: var(--text-main); min-height: 100vh; line-height: 1.7; }
+        .navbar { background: rgba(20, 29, 46, 0.85); backdrop-filter: blur(12px); position: sticky; top: 0; border-bottom: 1px solid var(--border); z-index: 100; }
+        .nav-container { max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; }
+        .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: #fff; text-decoration: none; }
+        .brand span { color: var(--primary); }
+        .nav-links { display: flex; gap: 18px; flex-wrap: wrap; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary); }
+        .container { max-width: 960px; margin: 0 auto; padding: 40px 20px 80px; }
+        .header-meta { margin-bottom: 36px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+        .header-meta h1 { font-size: 2.3rem; font-weight: 800; color: #fff; margin-bottom: 8px; }
+        .meta-tags { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.88rem; color: var(--text-muted); }
+        .content section { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 28px; margin-bottom: 24px; }
+        .content h2 { font-size: 1.35rem; color: var(--primary); margin-bottom: 14px; font-weight: 700; }
+        .content h3 { font-size: 1.1rem; color: #fff; margin: 18px 0 8px; }
+        .content p { color: var(--text-main); font-size: 0.98rem; margin-bottom: 14px; }
+        .content ul { margin-left: 20px; margin-bottom: 14px; color: var(--text-muted); }
+        .content li { margin-bottom: 8px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+        .stat-card { background: var(--surface-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; }
+        .stat-card .num { font-size: 2rem; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
+        .stat-card .label { font-size: 0.88rem; color: var(--text-muted); }
+        .highlight-box { background: rgba(0, 210, 180, 0.08); border-left: 4px solid var(--primary); padding: 14px 18px; border-radius: 0 10px 10px 0; margin: 16px 0; }
+        .footer { border-top: 1px solid var(--border); padding: 32px 20px; text-align: center; color: var(--text-muted); font-size: 0.88rem; }
+        .footer a { color: var(--primary); text-decoration: none; }
+        a { color: var(--accent); }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="brand">🧪 Color<span>Tube</span></a>
+            <nav class="nav-links">
+                <a href="index.html">Overview</a>
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="terms.html">Terms & Conditions</a>
+                <a href="ad-policy.html">AdMob Policy</a>
+                <a href="about.html" class="active">About Us</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container content">
+        <div class="header-meta">
+            <h1>About Us</h1>
+            <div class="meta-tags">
+                <span>🏢 Studio: Madhukar & Sons</span>
+                <span>👨‍💻 Founder / Lead: Yogesh Madhukar</span>
+                <span>🎮 Flagship: ColorTube</span>
+            </div>
+        </div>
+
+        <section>
+            <h2>1. Developer &amp; Publisher Identity</h2>
+            <p><strong>ColorTube is developed and published under Madhukar &amp; Sons.</strong></p>
+            <p>Madhukar &amp; Sons is an independent game development and software engineering studio dedicated to creating high-polish, immersive, and intellectually stimulating mobile entertainment applications for players worldwide.</p>
+            <div class="highlight-box">
+                "Our mission is to engineer casual games that marry mathematical precision and brain-training depth with calming, sensory-rich visual artistry."
+            </div>
+        </section>
+
+        <section>
+            <h2>2. The Story Behind ColorTube</h2>
+            <p>ColorTube was conceived as a premium evolution of the beloved liquid sorting puzzle genre. While standard sorting games often suffer from repetitive artwork, flat containers, and frustrating deadlocks, ColorTube was designed from scratch with three core pillars:</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="num">850</div>
+                    <div class="label">Verified Solvable Levels</div>
+                </div>
+                <div class="stat-card">
+                    <div class="num">16</div>
+                    <div class="label">Collectible Tube Silhouettes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="num">100%</div>
+                    <div class="label">Mathematical Guarantee</div>
+                </div>
+                <div class="stat-card">
+                    <div class="num">0</div>
+                    <div class="label">Intrusive Forced Logins</div>
+                </div>
+            </div>
+
+            <h3>Core Architectural Pillars:</h3>
+            <ul>
+                <li><strong>Mathematical Solvability Guarantee:</strong> Every level in ColorTube is passed through an in-engine Breadth-First Search (BFS) state validator before gameplay. Every single one of the 850 levels is guaranteed 100% solvable without unsolvable bottlenecks.</li>
+                <li><strong>Luminous Fluid &amp; Glass Aesthetics:</strong> Developed using custom Android hardware-accelerated Canvas shaders, multi-tier glass reflection highlights, realistic meniscus liquid curves, dynamic carbonation bubbles, and tube-originating celebration bursts.</li>
+                <li><strong>Respectful Player Economy:</strong> Players can progress organically through level milestones or unlock cosmetic tubes, palettes, and background themes using virtual coins earned through play or voluntary rewarded ads.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>3. Privacy &amp; Ethical Game Design</h2>
+            <p>At <strong>Madhukar &amp; Sons</strong>, we believe players deserve games that respect their time, privacy, and device resources:</p>
+            <ul>
+                <li><strong>No Invasive Permissions:</strong> ColorTube requests zero device hardware permissions (no contacts, camera, mic, or storage access).</li>
+                <li><strong>No User Profiles or Tracking:</strong> We do not track players across the web, run server-side user surveillance, or sell user records.</li>
+                <li><strong>Ethical Monetization:</strong> We partner exclusively with Google AdMob to deliver standard, transparent ad formats with clearly marked boundaries and full player opt-out controls.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>4. Company Details &amp; Contact Support</h2>
+            <p>We actively listen to player feedback, bug reports, and suggestions for future levels and customization themes.</p>
+            
+            <div class="highlight-box">
+                <p><strong>Madhukar &amp; Sons</strong></p>
+                <p>Lead Developer: Yogesh Madhukar</p>
+                <p>Support Email: <a href="mailto:yogeshmadhukar345ykm@gmail.com">yogeshmadhukar345ykm@gmail.com</a></p>
+                <p>GitHub Organization: <a href="https://github.com/yogeshmadhukar-apps" target="_blank" rel="noopener">github.com/yogeshmadhukar-apps</a></p>
+                <p>Official Repository: <a href="https://github.com/yogeshmadhukar-apps/ColorTube-Game" target="_blank" rel="noopener">ColorTube-Game on GitHub</a></p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 <strong>Madhukar & Sons</strong>. All rights reserved.</p>
+        <p style="margin-top: 6px;">Contact Support: <a href="mailto:yogeshmadhukar345ykm@gmail.com">yogeshmadhukar345ykm@gmail.com</a></p>
+    </footer>
+</body>
+</html>

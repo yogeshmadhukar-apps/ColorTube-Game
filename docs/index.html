@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ColorTube — Legal & Information Hub | Madhukar & Sons</title>
+    <style>
+        :root {
+            --bg-dark: #0a101d;
+            --surface: #141d2e;
+            --surface-card: #1c273c;
+            --primary: #00d2b4;
+            --primary-glow: rgba(0, 210, 180, 0.25);
+            --text-main: #e8ecf4;
+            --text-muted: #95a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #38bdf8;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        body { background: var(--bg-dark); color: var(--text-main); min-height: 100vh; line-height: 1.6; }
+        .navbar { background: rgba(20, 29, 46, 0.85); backdrop-filter: blur(12px); position: sticky; top: 0; border-bottom: 1px solid var(--border); z-index: 100; }
+        .nav-container { max-width: 1080px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; }
+        .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: #fff; text-decoration: none; }
+        .brand span { color: var(--primary); }
+        .nav-links { display: flex; gap: 18px; flex-wrap: wrap; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary); }
+        .container { max-width: 1080px; margin: 0 auto; padding: 40px 20px 80px; }
+        .hero { text-align: center; margin-bottom: 50px; }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 12px; font-weight: 800; background: linear-gradient(135deg, #fff 0%, var(--primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { color: var(--text-muted); font-size: 1.1rem; max-width: 680px; margin: 0 auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 48px; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; text-decoration: none; color: inherit; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 10px 25px var(--primary-glow); }
+        .card-icon { font-size: 2.2rem; margin-bottom: 16px; }
+        .card h2 { font-size: 1.3rem; margin-bottom: 10px; color: #fff; }
+        .card p { color: var(--text-muted); font-size: 0.92rem; flex-grow: 1; margin-bottom: 18px; }
+        .card-link { color: var(--primary); font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+        .overview-box { background: var(--surface-card); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin-bottom: 40px; }
+        .overview-box h2 { font-size: 1.4rem; margin-bottom: 16px; color: #fff; }
+        .overview-box p { color: var(--text-muted); margin-bottom: 14px; }
+        .footer { border-top: 1px solid var(--border); padding: 32px 20px; text-align: center; color: var(--text-muted); font-size: 0.88rem; }
+        .footer a { color: var(--primary); text-decoration: none; }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 2rem; }
+            .nav-links { gap: 12px; font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="brand">🧪 Color<span>Tube</span></a>
+            <nav class="nav-links">
+                <a href="index.html" class="active">Overview</a>
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="terms.html">Terms & Conditions</a>
+                <a href="ad-policy.html">AdMob Policy</a>
+                <a href="about.html">About Us</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Legal & Information Center</h1>
+            <p>Official legal documentation, privacy disclosures, advertising compliance, and company information for <strong>ColorTube</strong>, published under <strong>Madhukar & Sons</strong>.</p>
+        </section>
+
+        <section class="grid">
+            <a href="privacy-policy.html" class="card">
+                <div class="card-icon">🔒</div>
+                <h2>Privacy Policy</h2>
+                <p>Learn how data is handled, device identifier usage via Google AdMob, local storage practices, and your privacy rights under GDPR and CCPA.</p>
+                <span class="card-link">Read Privacy Policy &rarr;</span>
+            </a>
+
+            <a href="terms.html" class="card">
+                <div class="card-icon">⚖️</div>
+                <h2>Terms & Conditions</h2>
+                <p>Governing terms of service, end-user software license, virtual coin rules, intellectual property protection, and warranty limitations.</p>
+                <span class="card-link">Read Terms & Conditions &rarr;</span>
+            </a>
+
+            <a href="ad-policy.html" class="card">
+                <div class="card-icon">📢</div>
+                <h2>AdMob / Advertising Policy</h2>
+                <p>Detailed disclosures regarding Google Mobile Ads, banner, rewarded, and interstitial formats, fraud prevention, and opt-out options.</p>
+                <span class="card-link">Read Ad Policy &rarr;</span>
+            </a>
+
+            <a href="about.html" class="card">
+                <div class="card-icon">🏢</div>
+                <h2>About Us</h2>
+                <p>Studio information, development ethos under Madhukar & Sons, official contact details, and customer support channels.</p>
+                <span class="card-link">Learn About Us &rarr;</span>
+            </a>
+        </section>
+
+        <section class="overview-box">
+            <h2>About ColorTube &amp; Compliance Summary</h2>
+            <p><strong>ColorTube</strong> is an offline-capable casual liquid sorting puzzle game developed and published by <strong>Madhukar & Sons</strong>. We are committed to transparency, compliance with the Google Play Developer Program Policies, and adherence to global privacy laws.</p>
+            <p>Key highlights of our data practices:</p>
+            <ul style="margin-left: 20px; color: var(--text-muted); line-height: 1.8;">
+                <li><strong>Zero User Account Creation:</strong> No sign-up, email registration, password, or account profile is required to play.</li>
+                <li><strong>Local Device Storage:</strong> Game progress, coins balance, and cosmetic unlocks are stored solely on your local device.</li>
+                <li><strong>AdMob Monetization:</strong> Integrated Google Mobile Ads SDK serves adaptive banners, interstitials, and optional rewarded videos in compliance with Google Play Policies.</li>
+                <li><strong>Child & Family Protection:</strong> ColorTube does not knowingly target or collect personal identifying data from children.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 <strong>Madhukar & Sons</strong>. All rights reserved.</p>
+        <p style="margin-top: 6px;">Contact Support: <a href="mailto:yogeshmadhukar345ykm@gmail.com">yogeshmadhukar345ykm@gmail.com</a></p>
+    </footer>
+</body>
+</html>

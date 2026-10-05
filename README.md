@@ -62,4 +62,4 @@ cd ColorTube-Game
 ---
 
 ## 📄 License
-All rights reserved © 2026 Yogesh Madhukar.
+All rights reserved © 2026 Madhukar & Sons.

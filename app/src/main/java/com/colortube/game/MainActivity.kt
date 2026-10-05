@@ -1,6 +1,7 @@
 package com.colortube.game
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -39,6 +40,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var modalSettings: FrameLayout
     private lateinit var modalVictory: FrameLayout
     private lateinit var adBannerContainer: FrameLayout
+
+    // Legal & Information UI
+    private lateinit var btnSettingsPrivacy: View
+    private lateinit var btnSettingsTerms: View
+    private lateinit var btnSettingsAdPolicy: View
+    private lateinit var btnSettingsAbout: View
+    private lateinit var modalLegal: FrameLayout
+    private lateinit var tvLegalTitle: TextView
+    private lateinit var tvLegalContent: TextView
+    private lateinit var btnLegalClose: ImageView
+    private lateinit var btnLegalOpenBrowser: Button
+    private var currentLegalUrl: String = "https://yogeshmadhukar-apps.github.io/ColorTube-Game/"
 
     // Home UI
     private lateinit var tvHomeCoins: TextView
@@ -231,6 +244,17 @@ class MainActivity : AppCompatActivity() {
         switchMusic = findViewById(R.id.switchMusic)
         switchHaptics = findViewById(R.id.switchHaptics)
         btnSettingsClose = findViewById(R.id.btnSettingsClose)
+        btnSettingsPrivacy = findViewById(R.id.btnSettingsPrivacy)
+        btnSettingsTerms = findViewById(R.id.btnSettingsTerms)
+        btnSettingsAdPolicy = findViewById(R.id.btnSettingsAdPolicy)
+        btnSettingsAbout = findViewById(R.id.btnSettingsAbout)
+
+        // Legal Modal
+        modalLegal = findViewById(R.id.modalLegal)
+        tvLegalTitle = findViewById(R.id.tvLegalTitle)
+        tvLegalContent = findViewById(R.id.tvLegalContent)
+        btnLegalClose = findViewById(R.id.btnLegalClose)
+        btnLegalOpenBrowser = findViewById(R.id.btnLegalOpenBrowser)
 
         // Victory
         tvVictoryTitle = findViewById(R.id.tvVictoryTitle)
@@ -366,6 +390,56 @@ class MainActivity : AppCompatActivity() {
             modalSettings.visibility = View.GONE
         }
 
+        // Legal & Information Actions
+        btnSettingsPrivacy.setOnClickListener {
+            sound.playClick()
+            showLegalModal(
+                title = "Privacy Policy",
+                content = getPrivacyPolicyText(),
+                webUrl = "https://yogeshmadhukar-apps.github.io/ColorTube-Game/privacy-policy.html"
+            )
+        }
+        btnSettingsTerms.setOnClickListener {
+            sound.playClick()
+            showLegalModal(
+                title = "Terms & Conditions",
+                content = getTermsText(),
+                webUrl = "https://yogeshmadhukar-apps.github.io/ColorTube-Game/terms.html"
+            )
+        }
+        btnSettingsAdPolicy.setOnClickListener {
+            sound.playClick()
+            showLegalModal(
+                title = "AdMob & Advertising Policy",
+                content = getAdPolicyText(),
+                webUrl = "https://yogeshmadhukar-apps.github.io/ColorTube-Game/ad-policy.html"
+            )
+        }
+        btnSettingsAbout.setOnClickListener {
+            sound.playClick()
+            showLegalModal(
+                title = "About Us",
+                content = getAboutText(),
+                webUrl = "https://yogeshmadhukar-apps.github.io/ColorTube-Game/about.html"
+            )
+        }
+        btnLegalClose.setOnClickListener {
+            sound.playClick()
+            modalLegal.visibility = View.GONE
+        }
+        modalLegal.setOnClickListener {
+            modalLegal.visibility = View.GONE
+        }
+        btnLegalOpenBrowser.setOnClickListener {
+            sound.playClick()
+            try {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(currentLegalUrl))
+                startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(this, "Could not open browser", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         // Victory
         btnVictoryNext.setOnClickListener {
             sound.playClick()
@@ -417,6 +491,7 @@ class MainActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 when {
+                    modalLegal.visibility == View.VISIBLE -> modalLegal.visibility = View.GONE
                     modalUnlock.visibility == View.VISIBLE -> modalUnlock.visibility = View.GONE
                     modalSettings.visibility == View.VISIBLE -> modalSettings.visibility = View.GONE
                     modalVictory.visibility == View.VISIBLE -> modalVictory.visibility = View.GONE
@@ -952,5 +1027,135 @@ class MainActivity : AppCompatActivity() {
         handler.postDelayed({
             modalVictory.visibility = View.VISIBLE
         }, 500)
+    }
+
+    private fun showLegalModal(title: String, content: String, webUrl: String) {
+        currentLegalUrl = webUrl
+        tvLegalTitle.text = title
+        tvLegalContent.text = content
+        modalLegal.visibility = View.VISIBLE
+    }
+
+    private fun getPrivacyPolicyText(): String {
+        return """
+            PRIVACY POLICY
+            Publisher: Madhukar & Sons
+            Effective Date: October 2026
+            App: ColorTube (Android)
+            Contact: support@madhukarandsons.com
+
+            1. INTRODUCTION
+            ColorTube is developed and published under Madhukar & Sons. We respect your privacy and are committed to protecting it through transparent and ethical practices.
+
+            2. INFORMATION WE DO NOT COLLECT
+            - No account creation, login, or registration is required.
+            - We do not collect your real name, email, phone number, or physical address.
+            - We request zero intrusive device permissions (no camera, microphone, contacts, or storage access).
+
+            3. LOCAL DATA STORAGE
+            Game progress (Levels 1–850), virtual coins, cosmetic unlocks (tubes, themes, color palettes), and audio settings are stored locally on your device via standard Android SharedPreferences. This data is never sent to external servers.
+
+            4. GOOGLE ADMOB & THIRD-PARTY ADVERTISING
+            To provide this game for free, ColorTube integrates the Google Mobile Ads (AdMob) SDK.
+            - Collected Information: Google AdMob may collect your Google Advertising ID (GAID), device specifications, coarse IP location, and ad interaction metrics to serve ads, limit frequency, and combat fraud.
+            - Ad Formats: Anchored adaptive banner ads at the screen bottom, interstitial transitions between levels, and optional voluntary rewarded video ads (+25 coins).
+            - Reference Policies: Review Google's Privacy Policy at https://policies.google.com/privacy and partner policies at https://policies.google.com/technologies/partner-sites.
+
+            5. CHILDREN'S PRIVACY (COPPA / GDPR-K)
+            ColorTube is designed for a general audience and does not knowingly collect personal data from children under 13 (or under 16 in the EEA). Advertising requests are configured in accordance with Google Play Families Policy.
+
+            6. YOUR PRIVACY RIGHTS & OPT-OUT
+            - Personalized Ads Opt-Out: On your Android device, go to Settings > Google > Ads to reset or delete your Advertising ID.
+            - Data Erasure: Clear local app data via Android Settings > Apps > ColorTube > Clear Storage, or uninstall the app.
+
+            7. CONTACT US
+            Madhukar & Sons
+            Email: support@madhukarandsons.com
+            Official Website: https://yogeshmadhukar-apps.github.io/ColorTube-Game/
+        """.trimIndent()
+    }
+
+    private fun getTermsText(): String {
+        return """
+            TERMS & CONDITIONS
+            Publisher: Madhukar & Sons
+            Last Updated: October 2026
+            App: ColorTube (Android)
+
+            1. AGREEMENT TO TERMS
+            By downloading or playing ColorTube, you agree to these Terms & Conditions. If you do not agree, please do not use the application.
+
+            2. LICENSE GRANT
+            Madhukar & Sons grants you a personal, non-exclusive, non-transferable, revocable license to play ColorTube on personal Android devices for non-commercial entertainment.
+
+            3. INTELLECTUAL PROPERTY
+            All source code, graphics, liquid shaders, 16 collectible tube silhouettes, levels, audio, and branding are the exclusive intellectual property of Madhukar & Sons.
+
+            4. VIRTUAL COINS & UNLOCKS
+            Virtual coins and cosmetic items are in-game entertainment features. They have no real-world monetary value and cannot be redeemed, transferred, or exchanged for real currency.
+
+            5. ADVERTISEMENTS
+            ColorTube is a free-to-play app supported by Google AdMob advertising. Players acknowledge that banner, interstitial, and voluntary rewarded ads will be displayed.
+
+            6. PROHIBITED CONDUCT
+            You agree not to reverse engineer, decompile, use automated cheats, manipulate save states, or redistribute modified builds of ColorTube.
+
+            7. DISCLAIMER & LIMITATION OF LIABILITY
+            ColorTube is provided "AS IS" and "AS AVAILABLE". Madhukar & Sons disclaims all warranties and shall not be liable for any indirect or consequential damages.
+
+            8. CONTACT & JURISDICTION
+            Governed by the laws of India.
+            Madhukar & Sons • support@madhukarandsons.com
+        """.trimIndent()
+    }
+
+    private fun getAdPolicyText(): String {
+        return """
+            GOOGLE ADMOB & ADVERTISING POLICY
+            Publisher: Madhukar & Sons
+            Partner: Google LLC (Google Mobile Ads)
+            Last Updated: October 2026
+
+            1. ADVERTISING PHILOSOPHY
+            ColorTube supports free gaming through transparent, player-first digital advertisements delivered via Google AdMob. We adhere strictly to Google Play Developer Program Policies and AdMob Program Policies.
+
+            2. SUPPORTED AD FORMATS
+            - Anchored Adaptive Banner: Reserved at the bottom of the screen in a dedicated container isolated from all gameplay controls to prevent accidental clicks.
+            - Rewarded Video Ads: Completely voluntary. Players choose to watch a video to receive a clearly stated reward (+25 Coins or level bonus).
+            - Interstitial Ads: Displayed only at natural milestone transitions between levels with an immediate skip/close button.
+
+            3. FAMILY & CONTENT SAFETY
+            We enforce strict ad category filters in Google AdMob to block sensitive, adult, gambling, and inappropriate ad categories.
+
+            4. OPT-OUT & ADVERTISING ID CONTROLS
+            You may reset or delete your Google Advertising ID at any time via Android Settings > Google > Ads > Delete / Reset Advertising ID.
+
+            5. REPORTING INAPPROPRIATE ADS
+            If you encounter an improper ad, report it with details to: support@madhukarandsons.com.
+        """.trimIndent()
+    }
+
+    private fun getAboutText(): String {
+        return """
+            ABOUT US
+            Developer & Publisher: Madhukar & Sons
+            Contact: support@madhukarandsons.com
+            Official Website: https://yogeshmadhukar-apps.github.io/ColorTube-Game/
+
+            PUBLISHER STATEMENT
+            ColorTube is developed and published under Madhukar & Sons.
+
+            Madhukar & Sons is an independent game development studio dedicated to engineering high-polish, intellectually stimulating, and aesthetically calming casual puzzle games for mobile platforms worldwide.
+
+            CRAFTSMANSHIP OF COLORTUBE
+            ColorTube elevates the classic liquid sorting puzzle genre through:
+            - 850 Verified Solvable Levels: Backed by an in-engine Breadth-First Search (BFS) state validator guaranteeing 100% mathematical solvability.
+            - 16 Unique Collectible Tube Silhouettes: Including Chemist Flask, Crystal Flute, Alchemist Bulb, Hourglass Vase, Ancient Amphora, and Royal Decanter.
+            - Luminous Fluid Aesthetics: Hardware-accelerated Canvas shaders, realistic liquid meniscus, dynamic carbonation bubbles, and tube-originating completion celebrations.
+            - Fair Economy: Progression-based level unlocks paired with a balanced coin unlock system.
+
+            Thank you for playing ColorTube!
+            © 2026 Madhukar & Sons. All rights reserved.
+        """.trimIndent()
     }
 }

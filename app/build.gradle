@@ -17,8 +17,20 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            if (file('colortube-release.jks').exists()) {
+                storeFile file('colortube-release.jks')
+                storePassword System.getenv("COLORTUBE_KEYSTORE_PASSWORD") ?: "colortube2026"
+                keyAlias System.getenv("COLORTUBE_KEY_ALIAS") ?: "colortube"
+                keyPassword System.getenv("COLORTUBE_KEY_PASSWORD") ?: "colortube2026"
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

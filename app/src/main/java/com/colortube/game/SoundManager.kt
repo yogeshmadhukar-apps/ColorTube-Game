@@ -5,7 +5,11 @@ import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
+import android.media.MediaPlayer
+import android.media.SoundPool
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -20,8 +24,8 @@ import kotlin.math.sin
 /**
  * SoundManager
  *
- * Provides responsive synthesized audio effects (water pour, bubbles, cork pop, completion chime, etc.)
- * and haptic feedback. Works 100% offline with zero third-party copyrighted assets.
+ * Provides responsive physical audio effects (authentic liquid pour, bubbles, cork pop, completion chime, etc.)
+ * and haptic feedback.
  */
 class SoundManager(private val context: Context, private val prefs: GamePreferences) {
 
@@ -35,6 +39,53 @@ class SoundManager(private val context: Context, private val prefs: GamePreferen
 
     private val sampleRate = 22050
 
+    // High-performance low-latency SoundPool for authentic pour audio
+    private var soundPool: SoundPool? = null
+    private var pourSoundId: Int = 0
+    private var isPourSoundLoaded: Boolean = false
+    private var activePourStreamId: Int = 0
+
+    // Robust MediaPlayer fallback
+    private var pourMediaPlayer: MediaPlayer? = null
+    private val mainHandler = Handler(Looper.getMainLooper())
+    private var stopPourRunnable: Runnable? = null
+
+    init {
+        initPourSound()
+    }
+
+    private fun initPourSound() {
+        try {
+            val audioAttributes = AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_GAME)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build()
+
+            soundPool = SoundPool.Builder()
+                .setMaxStreams(4)
+                .setAudioAttributes(audioAttributes)
+                .build().apply {
+                    setOnLoadCompleteListener { _, sampleId, status ->
+                        if (sampleId == pourSoundId && status == 0) {
+                            isPourSoundLoaded = true
+                        }
+                    }
+                }
+            pourSoundId = soundPool?.load(context, R.raw.sound_pour, 1) ?: 0
+        } catch (_: Exception) {}
+
+        try {
+            pourMediaPlayer = MediaPlayer.create(context, R.raw.sound_pour)?.apply {
+                val audioAttributes = AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_GAME)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build()
+                setAudioAttributes(audioAttributes)
+                isLooping = false
+            }
+        } catch (_: Exception) {}
+    }
+
     fun playClick() {
         if (!prefs.soundEnabled) return
         playTone(frequency = 600.0, durationMs = 35, decay = 20.0)
@@ -47,90 +98,95 @@ class SoundManager(private val context: Context, private val prefs: GamePreferen
     }
 
     /**
-     * Synthesizes and plays a realistic physical liquid-pouring stream sound.
-     * Starts when liquid leaves the source spout, lasts for the exact flow duration,
-     * and accurately simulates acoustic fluid turbulence, cavity cavitation bubbles,
-     * and subtle glass resonance with rising Helmholtz pitch.
+     * Plays the authentic recorded liquid-pouring sound from user audio resource (R.raw.sound_pour).
+     * Synchronized with actual liquid pour duration and liquid amount:
+     * - Small pour (1 unit) -> short sound (~420ms)
+     * - Medium pour (2 units) -> medium-duration sound (~720ms)
+     * - Large/full pour (3-4 units) -> longer sound (~1020ms - 1320ms)
+     * Stops immediately when the pour stream finishes.
      */
     fun playPourStream(volumeUnits: Int, flowDurationMs: Long) {
         if (!prefs.soundEnabled) return
-        thread {
-            try {
-                val clampedMs = flowDurationMs.coerceIn(250L, 2500L).toInt()
-                val numSamples = (sampleRate * (clampedMs / 1000.0)).toInt()
-                val buffer = ShortArray(numSamples)
 
-                var pinkB0 = 0.0
-                var pinkB1 = 0.0
-                var pinkB2 = 0.0
-                val random = java.util.Random(42)
-
-                val attackSamples = (sampleRate * 0.05).toInt()
-                val releaseSamples = (sampleRate * 0.08).toInt()
-
-                // Bubble bursts phase
-                var bubblePhase = 0.0
-
-                for (i in 0 until numSamples) {
-                    val t = i.toDouble() / sampleRate
-                    val progress = i.toDouble() / numSamples
-
-                    // Envelope: fast smooth attack, sustained stream body, smooth release
-                    val env = when {
-                        i < attackSamples -> i.toDouble() / attackSamples
-                        i > numSamples - releaseSamples -> (numSamples - i).toDouble() / releaseSamples
-                        else -> 1.0
-                    }
-
-                    // 1. Turbulent fluid noise (Pink noise approximation)
-                    val white = (random.nextDouble() * 2.0 - 1.0)
-                    pinkB0 = 0.99765 * pinkB0 + white * 0.0990460
-                    pinkB1 = 0.96300 * pinkB1 + white * 0.2965164
-                    pinkB2 = 0.57000 * pinkB2 + white * 1.0526913
-                    val pink = (pinkB0 + pinkB1 + pinkB2 + white * 0.1848) * 0.18
-
-                    // 2. Liquid cavitation & bubbling inside glass cavity
-                    // Helmholtz pitch rises gently from ~500Hz to ~780Hz as liquid fills the glass
-                    val baseBubbleFreq = 480.0 + (progress * 260.0)
-                    val bubbleMod = 90.0 * sin(2.0 * PI * 14.0 * t) + 40.0 * sin(2.0 * PI * 33.0 * t)
-                    val bubbleFreq = baseBubbleFreq + bubbleMod
-                    bubblePhase += 2.0 * PI * bubbleFreq / sampleRate
-                    val bubbleWave = sin(bubblePhase) * 0.35
-
-                    // 3. Delicate glass resonance harmonic (crystal ringing ~1850Hz)
-                    val glassResonance = sin(2.0 * PI * 1850.0 * t) * 0.07
-
-                    // Combined physical fluid sound
-                    val mixed = (pink * 0.55 + bubbleWave * 0.38 + glassResonance) * env
-                    val scaled = (mixed.coerceIn(-1.0, 1.0) * Short.MAX_VALUE * 0.72).toInt()
-                    buffer[i] = scaled.toShort()
-                }
-
-                val audioTrack = AudioTrack.Builder()
-                    .setAudioAttributes(
-                        AudioAttributes.Builder()
-                            .setUsage(AudioAttributes.USAGE_GAME)
-                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                            .build()
-                    )
-                    .setAudioFormat(
-                        AudioFormat.Builder()
-                            .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-                            .setSampleRate(sampleRate)
-                            .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
-                            .build()
-                    )
-                    .setBufferSizeInBytes(buffer.size * 2)
-                    .setTransferMode(AudioTrack.MODE_STATIC)
-                    .build()
-
-                audioTrack.write(buffer, 0, buffer.size)
-                audioTrack.play()
-                Thread.sleep(clampedMs.toLong() + 25)
-                audioTrack.release()
-            } catch (_: Exception) {}
+        stopPourRunnable?.let {
+            mainHandler.removeCallbacks(it)
+            stopPourRunnable = null
         }
-        vibrate(35L + (volumeUnits * 15L).coerceAtMost(60L))
+
+        val vol = when (volumeUnits) {
+            1 -> 0.85f
+            2 -> 0.95f
+            else -> 1.0f
+        }
+
+        try {
+            if (isPourSoundLoaded && pourSoundId != 0) {
+                // Primary: SoundPool for zero-latency instant playback
+                if (activePourStreamId != 0) {
+                    soundPool?.stop(activePourStreamId)
+                }
+                activePourStreamId = soundPool?.play(pourSoundId, vol, vol, 1, 0, 1.0f) ?: 0
+            } else {
+                // Secondary: MediaPlayer fallback
+                pourMediaPlayer?.let { mp ->
+                    try {
+                        if (mp.isPlaying) {
+                            mp.pause()
+                        }
+                        mp.seekTo(0)
+                        mp.setVolume(vol, vol)
+                        mp.start()
+                    } catch (_: Exception) {}
+                }
+            }
+        } catch (_: Exception) {}
+
+        // Automatically schedule stop to match exact flowDurationMs
+        val runnable = Runnable {
+            stopPourStream()
+        }
+        stopPourRunnable = runnable
+        mainHandler.postDelayed(runnable, flowDurationMs)
+
+        vibrate(30L + (volumeUnits * 15L).coerceAtMost(60L))
+    }
+
+    /**
+     * Stops the active liquid-pouring sound immediately when the pour finishes.
+     */
+    fun stopPourStream() {
+        stopPourRunnable?.let {
+            mainHandler.removeCallbacks(it)
+            stopPourRunnable = null
+        }
+
+        try {
+            if (activePourStreamId != 0) {
+                soundPool?.stop(activePourStreamId)
+                activePourStreamId = 0
+            }
+        } catch (_: Exception) {}
+
+        try {
+            pourMediaPlayer?.let { mp ->
+                if (mp.isPlaying) {
+                    mp.pause()
+                    mp.seekTo(0)
+                }
+            }
+        } catch (_: Exception) {}
+    }
+
+    fun release() {
+        stopPourStream()
+        try {
+            soundPool?.release()
+            soundPool = null
+        } catch (_: Exception) {}
+        try {
+            pourMediaPlayer?.release()
+            pourMediaPlayer = null
+        } catch (_: Exception) {}
     }
 
     /**

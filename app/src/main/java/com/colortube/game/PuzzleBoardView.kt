@@ -287,9 +287,14 @@ class PuzzleBoardView @JvmOverloads constructor(
         destView.incomingCount = count
         destView.incomingFraction = 0f
 
-        // Volume-based duration scaling
+        // Volume-based duration scaling: small (1 unit) -> 420ms, medium (2 units) -> 720ms, large (3 units) -> 1020ms, full (4 units) -> 1320ms
         val approachDurationMs = 180L
-        val flowDurationMs = 260L * count + 60L
+        val flowDurationMs = when (count) {
+            1 -> 420L
+            2 -> 720L
+            3 -> 1020L
+            else -> 1320L
+        }
         val returnDurationMs = 190L
         val totalDurationMs = approachDurationMs + flowDurationMs + returnDurationMs
 

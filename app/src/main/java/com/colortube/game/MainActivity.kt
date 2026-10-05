@@ -150,11 +150,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
+        sound.stopPourStream()
         AdManager.pauseBanner()
         super.onPause()
     }
 
     override fun onDestroy() {
+        sound.release()
         AdManager.destroyBanner()
         super.onDestroy()
     }
@@ -822,6 +824,7 @@ class MainActivity : AppCompatActivity() {
                         sound.playPourStream(volumeUnits = countToPour, flowDurationMs = flowDurationMs)
                     },
                     onStreamEnd = {
+                        sound.stopPourStream()
                         sound.playPourLanding()
                     },
                     onFinished = {

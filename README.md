@@ -1,12 +1,12 @@
 # ColorTube — Water Sort Puzzle Game
 
-A water sort color puzzle game for Android built with Kotlin. Features 850 levels, fluid animations, custom glass tube silhouettes, theme customization, and an integrated mathematical solvability validator.
+A water sort color puzzle game for Android built with Kotlin. Features 1,000 levels, fluid animations, custom glass tube silhouettes, theme customization, and an integrated mathematical solvability validator.
 
 ---
 
 ## 🧪 Features
 
-- **850 Verified Solvable Levels:** Progressive difficulty curve ranging from gentle 2-color tutorial stages to expert 10-color / 12-tube challenges.
+- **1,000 Verified Solvable Levels:** Progressive difficulty curve ranging from gentle 2-color tutorial stages to expert 10-color / 12-tube challenges.
 - **Built-in Solvability Verification:** Integrated Breadth-First Search (BFS) puzzle validator guarantees that every generated layout is 100% mathematically solvable without deadlocks.
 - **16 Unique Collectible Tube Silhouettes:**
   - Classic Glass, Chemist Flask, Slender Vial, Crystal Flute

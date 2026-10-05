@@ -125,7 +125,7 @@ enum class TubeSkin(
 /**
  * BackgroundTheme
  *
- * Visual backdrop collections that unlock progressively through level progression up to Level 850.
+ * Visual backdrop collections that unlock progressively through level progression up to Level 1000.
  */
 enum class BackgroundTheme(
     val id: String,

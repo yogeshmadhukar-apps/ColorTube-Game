@@ -32,7 +32,7 @@ data class LevelData(
  */
 object LevelManager {
 
-    const val TOTAL_LEVELS = 850
+    const val TOTAL_LEVELS = 1000
 
     private val cachedLevels = mutableMapOf<Int, LevelData>()
 
@@ -43,7 +43,7 @@ object LevelManager {
     }
 
     private fun generateSolvableLevel(level: Int): LevelData {
-        // Determine difficulty parameters based on level (1 to 850)
+        // Determine difficulty parameters based on level (1 to 1000)
         val (numColors, numEmptyTubes, scrambleSteps) = when {
             level in 1..3 -> Triple(2, 1, 10)
             level in 4..10 -> Triple(3, 1, 15)
@@ -60,7 +60,10 @@ object LevelManager {
             level in 501..590 -> Triple(10, 2, 130)
             level in 591..680 -> Triple(10, 2, 145)
             level in 681..770 -> Triple(10, 2, 160)
-            else -> Triple(10, 2, 180)
+            level in 771..850 -> Triple(10, 2, 180)
+            level in 851..920 -> Triple(10, 2, 195)
+            level in 921..970 -> Triple(10, 2, 210)
+            else -> Triple(10, 2, 225)
         }
 
         val totalTubes = numColors + numEmptyTubes

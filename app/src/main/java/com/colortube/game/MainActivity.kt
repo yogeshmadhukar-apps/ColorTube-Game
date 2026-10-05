@@ -1080,7 +1080,7 @@ class MainActivity : AppCompatActivity() {
             - We request zero intrusive device permissions (no camera, microphone, contacts, or storage access).
 
             3. LOCAL DATA STORAGE
-            Game progress (Levels 1–850), virtual coins, cosmetic unlocks (tubes, themes, color palettes), and audio settings are stored locally on your device via standard Android SharedPreferences. This data is never sent to external servers.
+            Game progress (Levels 1–1000), virtual coins, cosmetic unlocks (tubes, themes, color palettes), and audio settings are stored locally on your device via standard Android SharedPreferences. This data is never sent to external servers.
 
             4. GOOGLE ADMOB & THIRD-PARTY ADVERTISING
             To provide this game for free, ColorTube integrates the Google Mobile Ads (AdMob) SDK.
@@ -1176,7 +1176,7 @@ class MainActivity : AppCompatActivity() {
 
             CRAFTSMANSHIP OF COLORTUBE
             ColorTube elevates the classic liquid sorting puzzle genre through:
-            - 850 Verified Solvable Levels: Backed by an in-engine Breadth-First Search (BFS) state validator guaranteeing 100% mathematical solvability.
+            - 1000 Verified Solvable Levels: Backed by an in-engine Breadth-First Search (BFS) state validator guaranteeing 100% mathematical solvability.
             - 16 Unique Collectible Tube Silhouettes: Including Chemist Flask, Crystal Flute, Alchemist Bulb, Hourglass Vase, Ancient Amphora, and Royal Decanter.
             - Luminous Fluid Aesthetics: Hardware-accelerated Canvas shaders, realistic liquid meniscus, dynamic carbonation bubbles, and tube-originating completion celebrations.
             - Fair Economy: Progression-based level unlocks paired with a balanced coin unlock system.

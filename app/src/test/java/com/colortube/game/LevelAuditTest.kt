@@ -8,8 +8,8 @@ import java.util.PriorityQueue
 class LevelAuditTest {
 
     @Test
-    fun auditLevelManagerGenerationIntegrity_All850Levels() {
-        println("=== AUDITING LEVEL GENERATION (LEVELS 1 TO 850) ===")
+    fun auditLevelManagerGenerationIntegrity_All1000Levels() {
+        println("=== AUDITING LEVEL GENERATION (LEVELS 1 TO 1000) ===")
         val capacity = 4
         var anyError = false
 
@@ -58,7 +58,7 @@ class LevelAuditTest {
             val alreadySolved = coloredTubes.size == levelData.numColors && coloredTubes.all { t -> t.size == 4 && t.all { it == t[0] } }
             assertFalse("Level $lvl is already completely solved at start!", alreadySolved)
         }
-        println("✓ Passed Level Generation & Color Conservation Audit for all 850 levels.")
+        println("✓ Passed Level Generation & Color Conservation Audit for all 1000 levels.")
     }
 
     @Test
@@ -83,21 +83,21 @@ class LevelAuditTest {
         val failedLevels = mutableListOf<Int>()
         val sampleLevels = mutableListOf<Int>()
 
-        // Check first 50 levels comprehensively, plus every 10th level up to 850,
-        // and boundary levels (1, 3, 4, 10, 11, 25, 26, 50, 51, 80, 81, 120, 121, 170, 171, 230, 231, 290, 291, 350, 420, 500, 590, 680, 770, 850)
+        // Check first 50 levels comprehensively, plus every 15th level up to 1000,
+        // and boundary / milestone levels
         val milestoneLevels = listOf(
             1, 2, 3, 4, 5, 10, 11, 15, 20, 25, 26, 30, 40, 50, 51, 60, 70, 80, 81, 90, 100, 110, 120,
             121, 130, 150, 170, 171, 200, 230, 231, 260, 290, 291, 320, 350, 380, 420, 450, 500,
-            550, 590, 630, 680, 720, 770, 800, 850
+            550, 590, 630, 680, 720, 770, 800, 850, 875, 900, 925, 950, 975, 1000
         )
         sampleLevels.addAll(1..50)
         sampleLevels.addAll(milestoneLevels)
-        for (lvl in 51..850 step 15) {
+        for (lvl in 51..LevelManager.TOTAL_LEVELS step 15) {
             sampleLevels.add(lvl)
         }
         val distinctLevels = sampleLevels.distinct().sorted()
 
-        println("Testing solvability on ${distinctLevels.size} representative levels across the 1..850 range...")
+        println("Testing solvability on ${distinctLevels.size} representative levels across the 1..1000 range...")
 
         for (lvl in distinctLevels) {
             val levelData = LevelManager.getLevel(lvl)
@@ -111,7 +111,28 @@ class LevelAuditTest {
         if (failedLevels.isNotEmpty()) {
             fail("The following levels were detected as UNSOLVABLE: $failedLevels")
         } else {
-            println("✓ All tested levels are 100% SOLVABLE!")
+            println("✓ All tested levels are 100% SOLVABLE across 1..1000!")
+        }
+    }
+
+    @Test
+    fun auditLevels851To1000_AllSolvableAndValid() {
+        println("=== COMPREHENSIVE SOLVABILITY AUDIT FOR ALL LEVELS 851 TO 1000 ===")
+        val unsolvableLevels = mutableListOf<Int>()
+        for (lvl in 851..1000) {
+            val levelData = LevelManager.getLevel(lvl)
+            assertEquals("Level $lvl number mismatch", lvl, levelData.levelNumber)
+            assertEquals("Level $lvl must have 10 colors", 10, levelData.numColors)
+            assertTrue("Level $lvl must have at least 1 empty tube", levelData.numEmptyTubes >= 1)
+            val isSolvable = LevelManager.isSolvable(levelData.tubeConfigurations, levelData.numColors)
+            if (!isSolvable) {
+                unsolvableLevels.add(lvl)
+            }
+        }
+        if (unsolvableLevels.isNotEmpty()) {
+            fail("Levels 851–1000 with solvability failure: $unsolvableLevels")
+        } else {
+            println("✓ All Levels 851 to 1000 are 100% SOLVABLE and verified!")
         }
     }
 
@@ -198,8 +219,8 @@ class LevelAuditTest {
     }
 
     @Test
-    fun auditMoveValidationAndExecution_All850Levels() {
-        println("=== AUDITING MOVE VALIDATION & POUR EXECUTION (LEVELS 1 TO 850) ===")
+    fun auditMoveValidationAndExecution_All1000Levels() {
+        println("=== AUDITING MOVE VALIDATION & POUR EXECUTION (LEVELS 1 TO 1000) ===")
         var totalValidOpeningMoves = 0
 
         for (lvl in 1..LevelManager.TOTAL_LEVELS) {
@@ -286,7 +307,7 @@ class LevelAuditTest {
             )
         }
 
-        println("✓ Passed Move Validation & Volume Calculation Audit across all 850 levels.")
+        println("✓ Passed Move Validation & Volume Calculation Audit across all 1000 levels.")
         println("  Total valid opening moves tested: $totalValidOpeningMoves across ${LevelManager.TOTAL_LEVELS} levels.")
     }
 

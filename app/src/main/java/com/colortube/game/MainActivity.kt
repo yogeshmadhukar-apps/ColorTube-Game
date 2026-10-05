@@ -771,6 +771,7 @@ class MainActivity : AppCompatActivity() {
         if (puzzleBoardView.isPouring || puzzleBoardView.isCelebrating) return
         val eng = engine ?: return
         if (eng.isLevelComplete) return
+        if (clickedIndex !in eng.tubes.indices) return
 
         val prevSelected = selectedTubeIndex
 
@@ -790,7 +791,7 @@ class MainActivity : AppCompatActivity() {
 
             selectedTubeIndex = clickedIndex
             sound.playTubeSelect()
-            tvGameStatus.text = "Now tap destination tube"
+            tvGameStatus.text = "Selected Tube ${clickedIndex + 1}. Now tap destination."
             puzzleBoardView.setTubes(eng.tubes, selectedIndex = clickedIndex, hintPair = hintPair)
         } else {
             // Deselect if same tube
@@ -856,11 +857,34 @@ class MainActivity : AppCompatActivity() {
                     }
                 )
             } else {
-                // Illegal pour
-                sound.playInvalidMove()
-                tvGameStatus.text = "Invalid move! Match color or find empty space."
-                selectedTubeIndex = null
-                puzzleBoardView.setTubes(eng.tubes, selectedIndex = null, hintPair = hintPair)
+                // Pour cannot be performed directly from prevSelected to clickedIndex.
+                // Inspect clicked tube state to handle gracefully:
+                val clickedTube = eng.tubes[clickedIndex]
+                val srcTube = eng.tubes[prevSelected]
+
+                if (clickedTube.isCompleted()) {
+                    // Clicked tube is already solved and sealed: warn without losing current selection
+                    sound.playInvalidMove()
+                    tvGameStatus.text = "This tube is already completed!"
+                    puzzleBoardView.setTubes(eng.tubes, selectedIndex = prevSelected, hintPair = hintPair)
+                } else if (clickedTube.isNotEmpty()) {
+                    // Clicked tube contains liquid and is playable:
+                    // Smoothly switch source selection to this new tube (standard Water Sort UX)
+                    selectedTubeIndex = clickedIndex
+                    sound.playTubeSelect()
+                    if (clickedTube.isFull() && clickedTube.topColor() == srcTube.topColor()) {
+                        tvGameStatus.text = "Destination is full! Selected Tube ${clickedIndex + 1} as new source."
+                    } else {
+                        tvGameStatus.text = "Selected Tube ${clickedIndex + 1}. Now tap destination."
+                    }
+                    puzzleBoardView.setTubes(eng.tubes, selectedIndex = clickedIndex, hintPair = hintPair)
+                } else {
+                    // Destination is empty but pour was somehow illegal (e.g., src is empty/completed)
+                    sound.playInvalidMove()
+                    tvGameStatus.text = "Invalid move! Match color or find empty space."
+                    selectedTubeIndex = prevSelected
+                    puzzleBoardView.setTubes(eng.tubes, selectedIndex = prevSelected, hintPair = hintPair)
+                }
             }
         }
     }

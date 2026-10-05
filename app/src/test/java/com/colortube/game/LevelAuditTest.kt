@@ -196,4 +196,145 @@ class LevelAuditTest {
 
         return false
     }
+
+    @Test
+    fun auditMoveValidationAndExecution_All850Levels() {
+        println("=== AUDITING MOVE VALIDATION & POUR EXECUTION (LEVELS 1 TO 850) ===")
+        var totalValidOpeningMoves = 0
+
+        for (lvl in 1..LevelManager.TOTAL_LEVELS) {
+            val eng = LevelManager.buildInitialEngine(lvl)
+            val numTubes = eng.tubes.size
+
+            // Verify each tube capacity and initial integrity
+            for (tube in eng.tubes) {
+                assertEquals("Tube capacity must be strictly 4 in level $lvl", 4, tube.capacity)
+                assertTrue("Tube size must not exceed capacity 4 in level $lvl", tube.layers.size <= 4)
+            }
+
+            var validMovesCount = 0
+
+            // Test every pair of tubes (i, j)
+            for (i in 0 until numTubes) {
+                for (j in 0 until numTubes) {
+                    if (i == j) {
+                        assertFalse("Self-pour must be false for tube $i in level $lvl", eng.canPour(i, j))
+                        continue
+                    }
+
+                    val canPour = eng.canPour(i, j)
+                    val src = eng.tubes[i]
+                    val dst = eng.tubes[j]
+
+                    if (canPour) {
+                        validMovesCount++
+                        totalValidOpeningMoves++
+
+                        // Validate invariant rules that must hold for ANY valid pour
+                        assertTrue("Source tube must not be empty", src.isNotEmpty())
+                        assertFalse("Source tube must not be completed", src.isCompleted())
+                        assertFalse("Destination tube must not be full", dst.isFull())
+                        val spaceLeft = dst.capacity - dst.layers.size
+                        assertTrue("Destination tube must have at least 1 unit space", spaceLeft > 0)
+                        assertTrue(
+                            "Destination top color must match source top color or destination must be empty",
+                            dst.isEmpty() || dst.topColor() == src.topColor()
+                        )
+
+                        // Execute pour on a clone to verify mathematical volume calculation & undo
+                        val testEng = LevelManager.buildInitialEngine(lvl)
+                        val totalSegmentsBefore = testEng.tubes.sumOf { it.layers.size }
+                        val srcCountBefore = testEng.tubes[i].topCount()
+                        val dstSpaceBefore = testEng.tubes[j].capacity - testEng.tubes[j].layers.size
+                        val expectedPoured = minOf(srcCountBefore, dstSpaceBefore)
+
+                        val actualPoured = testEng.pour(i, j)
+                        assertEquals("Actual poured units must match minOf(topCount, spaceLeft)", expectedPoured, actualPoured)
+                        assertTrue("Poured units must be >= 1", actualPoured >= 1)
+
+                        val totalSegmentsAfter = testEng.tubes.sumOf { it.layers.size }
+                        assertEquals("Liquid volume must be conserved after pour", totalSegmentsBefore, totalSegmentsAfter)
+
+                        // Verify undo restores exact initial state
+                        val undone = testEng.undo()
+                        assertTrue("Undo must succeed", undone)
+                        assertEquals(
+                            "Undo must restore exact source tube layers",
+                            eng.tubes[i].layers,
+                            testEng.tubes[i].layers
+                        )
+                        assertEquals(
+                            "Undo must restore exact destination tube layers",
+                            eng.tubes[j].layers,
+                            testEng.tubes[j].layers
+                        )
+                    } else {
+                        // If canPour is false, verify the exact invalid condition
+                        val isInvalid = src.isEmpty() ||
+                                dst.isFull() ||
+                                src.isCompleted() ||
+                                (dst.isNotEmpty() && dst.topColor() != src.topColor())
+                        assertTrue("canPour returned false for legal configuration in level $lvl ($i -> $j)", isInvalid)
+                    }
+                }
+            }
+
+            // Every level must have at least one valid opening move available
+            assertTrue(
+                "Level $lvl has 0 valid opening moves!",
+                validMovesCount > 0
+            )
+        }
+
+        println("✓ Passed Move Validation & Volume Calculation Audit across all 850 levels.")
+        println("  Total valid opening moves tested: $totalValidOpeningMoves across ${LevelManager.TOTAL_LEVELS} levels.")
+    }
+
+    @Test
+    fun testSelectionSwitchingAndEdgeCases() {
+        println("=== TESTING SOURCE SELECTION SWITCHING & EDGE CASES ===")
+        // Test Tube with partial fill vs full fill
+        val tEmpty = Tube(id = 1, capacity = 4, layers = mutableListOf())
+        val tCompleted = Tube(id = 2, capacity = 4, layers = mutableListOf(LiquidColor.CYAN, LiquidColor.CYAN, LiquidColor.CYAN, LiquidColor.CYAN))
+        val tPartialCyan = Tube(id = 3, capacity = 4, layers = mutableListOf(LiquidColor.CYAN, LiquidColor.CYAN))
+        val tPartialCoral = Tube(id = 4, capacity = 4, layers = mutableListOf(LiquidColor.CORAL, LiquidColor.CORAL))
+        val tFullMixed = Tube(id = 5, capacity = 4, layers = mutableListOf(LiquidColor.CYAN, LiquidColor.LIME, LiquidColor.LIME, LiquidColor.LIME))
+
+        val eng = GameEngine(1, listOf(tEmpty, tCompleted, tPartialCyan, tPartialCoral, tFullMixed))
+
+        // Index 0: tEmpty
+        // Index 1: tCompleted (4 Cyan)
+        // Index 2: tPartialCyan (2 Cyan)
+        // Index 3: tPartialCoral (2 Coral)
+        // Index 4: tFullMixed (1 Cyan, 3 Lime)
+
+        // Cannot pour out of empty
+        assertFalse(eng.canPour(0, 2))
+        // Cannot pour out of completed
+        assertFalse(eng.canPour(1, 0))
+        assertFalse(eng.canPour(1, 2))
+
+        // Cannot pour into full
+        assertFalse(eng.canPour(2, 1))
+        assertFalse(eng.canPour(2, 4))
+
+        // Can pour into empty
+        assertTrue(eng.canPour(2, 0))
+        assertTrue(eng.canPour(3, 0))
+
+        // Cannot pour mismatching colors
+        assertFalse(eng.canPour(2, 3)) // Cyan onto Coral
+        assertFalse(eng.canPour(3, 2)) // Coral onto Cyan
+
+        // But tPartialCoral is a playable tube with liquid and not completed
+        assertTrue(eng.tubes[3].isNotEmpty() && !eng.tubes[3].isCompleted())
+
+        // Executing pour from 2 into 0
+        val poured = eng.pour(2, 0)
+        assertEquals(2, poured)
+        assertEquals(2, eng.tubes[0].layers.size)
+        assertEquals(0, eng.tubes[2].layers.size)
+
+        println("✓ Selection switching and edge case validations passed!")
+    }
 }

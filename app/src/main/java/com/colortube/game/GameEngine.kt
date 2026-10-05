@@ -1,6 +1,5 @@
 package com.colortube.game
 
-import android.graphics.Color
 import java.util.ArrayDeque
 
 /**
@@ -16,16 +15,16 @@ enum class LiquidColor(
     val bottomColor: Int,
     val hexString: String
 ) {
-    CYAN(1, "Radiant Cyan", Color.parseColor("#00D2D3"), Color.parseColor("#009B9C"), "#00D2D3"),
-    CORAL(2, "Neon Coral", Color.parseColor("#DD2D42"), Color.parseColor("#B9082C"), "#FF4757"),
-    LIME(3, "Electric Lime", Color.parseColor("#2ED573"), Color.parseColor("#10AC84"), "#2ED573"),
-    VIOLET(4, "Royal Violet", Color.parseColor("#5352ED"), Color.parseColor("#3B3AC4"), "#5352ED"),
-    AMBER(5, "Sunburst Amber", Color.parseColor("#FFAC32"), Color.parseColor("#855400"), "#FFA502"),
-    ROSE(6, "Rose Quartz", Color.parseColor("#FF6B81"), Color.parseColor("#D63031"), "#FF6B81"),
-    AQUA(7, "Inverse Aqua", Color.parseColor("#26DCDD"), Color.parseColor("#006A6A"), "#26DCDD"),
-    GOLD(8, "Golden Honey", Color.parseColor("#FFC312"), Color.parseColor("#F79F1F"), "#FFC312"),
-    EMERALD(9, "Emerald Green", Color.parseColor("#1DD1A1"), Color.parseColor("#10AC84"), "#1DD1A1"),
-    DEEP_PURPLE(10, "Cosmic Purple", Color.parseColor("#8854D0"), Color.parseColor("#3867D6"), "#8854D0");
+    CYAN(1, "Radiant Cyan", 0xFF00D2D3.toInt(), 0xFF009B9C.toInt(), "#00D2D3"),
+    CORAL(2, "Neon Coral", 0xFFDD2D42.toInt(), 0xFFB9082C.toInt(), "#FF4757"),
+    LIME(3, "Electric Lime", 0xFF2ED573.toInt(), 0xFF10AC84.toInt(), "#2ED573"),
+    VIOLET(4, "Royal Violet", 0xFF5352ED.toInt(), 0xFF3B3AC4.toInt(), "#5352ED"),
+    AMBER(5, "Sunburst Amber", 0xFFFFAC32.toInt(), 0xFF855400.toInt(), "#FFA502"),
+    ROSE(6, "Rose Quartz", 0xFFFF6B81.toInt(), 0xFFD63031.toInt(), "#FF6B81"),
+    AQUA(7, "Inverse Aqua", 0xFF26DCDD.toInt(), 0xFF006A6A.toInt(), "#26DCDD"),
+    GOLD(8, "Golden Honey", 0xFFFFC312.toInt(), 0xFFF79F1F.toInt(), "#FFC312"),
+    EMERALD(9, "Emerald Green", 0xFF1DD1A1.toInt(), 0xFF10AC84.toInt(), "#1DD1A1"),
+    DEEP_PURPLE(10, "Cosmic Purple", 0xFF8854D0.toInt(), 0xFF3867D6.toInt(), "#8854D0");
 
     companion object {
         fun fromId(id: Int): LiquidColor = entries.firstOrNull { it.id == id } ?: CYAN

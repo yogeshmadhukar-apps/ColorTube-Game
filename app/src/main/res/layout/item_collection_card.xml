@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardThemeItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <!-- Showcase Container: 100% transparent with zero square background / borders -->
+    <FrameLayout
+        android:id="@+id/previewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="146dp"
+        android:background="@android:color/transparent">
+
+        <!-- 1. Dedicated Tube Showcase Preview -->
+        <com.colortube.game.TubePreviewView
+            android:id="@+id/tubePreviewView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <!-- 2. Background Theme Preview (Centered rounded glass tile) -->
+        <com.colortube.game.ThemePreviewView
+            android:id="@+id/themePreviewView"
+            android:layout_width="112dp"
+            android:layout_height="136dp"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <!-- 3. Color Palette Preview (3 mini tubes floating cleanly) -->
+        <LinearLayout
+            android:id="@+id/colorPalettePreview"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="4dp"
+            android:visibility="gone">
+
+            <com.colortube.game.GlassTubeView
+                android:id="@+id/paletteTube1"
+                android:layout_width="34dp"
+                android:layout_height="115dp"
+                android:layout_marginEnd="6dp" />
+
+            <com.colortube.game.GlassTubeView
+                android:id="@+id/paletteTube2"
+                android:layout_width="34dp"
+                android:layout_height="115dp"
+                android:layout_marginEnd="6dp" />
+
+            <com.colortube.game.GlassTubeView
+                android:id="@+id/paletteTube3"
+                android:layout_width="34dp"
+                android:layout_height="115dp" />
+        </LinearLayout>
+
+        <!-- Equipped Green Checkmark Badge -->
+        <TextView
+            android:id="@+id/badgeEquipped"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="2dp"
+            android:background="@drawable/bg_glass_pill"
+            android:gravity="center"
+            android:text="✓"
+            android:textColor="#2ED573"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <!-- Floating Lock Overlay: NO dark box background! Completely transparent -->
+        <LinearLayout
+            android:id="@+id/lockOverlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔒"
+                android:textSize="26sp" />
+
+            <TextView
+                android:id="@+id/tvLockLevel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/bg_glass_pill"
+                android:paddingStart="10dp"
+                android:paddingTop="3dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="3dp"
+                android:text="LEVEL 10"
+                android:textColor="@color/on_surface"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- Item Title -->
+    <TextView
+        android:id="@+id/tvItemTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Classic Glass"
+        android:textColor="@color/on_surface"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+    <!-- Action / Status Pill (Equip / Equipped / Locked) -->
+    <LinearLayout
+        android:id="@+id/btnItemAction"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/bg_glass_pill"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
+
+        <TextView
+            android:id="@+id/tvActionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EQUIP"
+            android:textColor="@color/primary"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

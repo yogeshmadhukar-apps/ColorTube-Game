@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="460dp"
+                android:centerX="50%"
+                android:centerY="40%"
+                android:startColor="#260C14"
+                android:centerColor="#14060A"
+                android:endColor="#080204" />
+        </shape>
+    </item>
+    <item>
+        <bitmap
+            android:src="@drawable/bg_pattern_tile"
+            android:tileMode="repeat"
+            android:dither="true"
+            android:alpha="0.50" />
+    </item>
+</layer-list>
